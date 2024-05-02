@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="styles.css">
+  <title>Change a point color</title>
+</head>
+
+<body onload="main()">
+  <canvas id="webgl" width="400" height="400">
+    Please use a browser that supports "canvas"
+  </canvas>
+<p>
+<p id="numdot"> XXX </p>
+<br></br>
+Camera Angle
+  <input type="range" min="-90" max="180" value="30" class="slider" id="camera">
+<br></br>
+Animation:
+<button type="button" id="on">on</button>
+<button type="button" id="off">off</button>
+<br></br>
+
+Right Leg
+  <input type="range" min="-50" max="45" value="15" class="rLeg" id="rLeg">
+<br></br>
+Left Leg
+  <input type="range" min="-50" max="45" value="15" class="lLeg" id="lLeg">
+
+<br></br>
+Flap Wings
+  <input type="range" min="0" max="45" value="10" class="wings" id="wings">
+<!--
+  <br></br>
+  <button type="button" id="clear">Clear Canvas</button>
+  <button type="button" id="delete">Undo</button>
+  <button type="button" id="bonsaip">Show Bonsai</button>
+  <button type="button" id="return">Return to Drawing</button>
+
+  <p>
+  <h1>Drawing Mode:</h1>
+  <button type="button" id="square">Squares</button>
+  <button type="button" id="triangle">Triangles</button>
+  <button type="button" id="circle">Circles</button>
+  <p>
+  <h1>Shape Color:</h1>
+  Red
+  <input type="range" min="0" max="100" value="100" class="slider" id="redS">
+  Blue
+  <input type="range" min="0" max="100" value="100" class="slider" id="blueS">
+  Green
+  <input type="range" min="0" max="100" value="100" class="slider" id="greenS">
+  <br></br>
+
+  <h1>Shape Size:</h1> 
+  <input type="range" min="10" max="50" value="10" class="slider" id="size">
+  <h1>(Circles) Segment Count</h1> <input type="range" min="10" max="50" value="10" class="slider" id="segment">
+  <br></br>
+  <h1>(Triangle Manipulation)</h1>
+    Stretch Width<input type="range" min="0" max="50" value="0" class="slider" id="width">
+    Stretch Height<input type="range" min="0" max="50" value="0" class="slider" id="height">
+    <br></br>
+  <button type="button" id="fliph">Flip Horizontally</button>
+  <button type="button" id="flipv">Flip Vertically</button>
+  <button type="button" id="eql">Equilateral</button>
+  -->
+  
+  <script src="../lib/webgl-utils.js"></script>
+  <script src="../lib/webgl-debug.js"></script>
+  <script src="../lib/cuon-utils.js"></script>
+  <script src="../lib/cuon-matrix-cse160.js"></script>
+  <script src="asg2.js"></script>
+  <script src="Point.js"></script>
+  <script src="Triangle.js"></script>
+  <script src="Circles.js"></script>
+  <script src="Cube.js"></script>
+
+
+</body>
+
+</html>
