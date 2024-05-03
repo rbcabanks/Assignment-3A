@@ -90,7 +90,7 @@ let a_UV;
 
 
 
-let gAnimalGlobalRotation=30;
+let gAnimalGlobalRotation=0;
 function addActionsForUI() { // used this resource "https://www.w3schools.com/howto/howto_js_rangeslider.asp"
  document.getElementById('camera').addEventListener('mousemove', function () {gAnimalGlobalRotation=this.value; renderScene();}); //g_selectedColor[0]=this.value/100;
  document.getElementById('rLeg').addEventListener('mousemove', function () {g_rLeg=this.value; renderScene();}); //g_selectedColor[0]=this.value/100;
@@ -186,9 +186,8 @@ function updateAnimationAngles(){
 }
 function renderScene(){
 
-  let translateAll=.8;
+  let translateAll=5;
   var startTime=performance.now();
-
   updateAnimationAngles();
   renderAllShapes();
   
@@ -226,7 +225,7 @@ function renderScene(){
   //drawCube(modelMatrix);
   drawCubeUV(modelMatrix,uv);
   
-  translateM.setTranslate(0,.5,-.35-translateAll);
+  translateM.setTranslate(0,.5,.1-translateAll);
   //rotateM.setRotate(5,-.1,0,0);
   scaleM.setScale(1.1,.2,.2);
   modelMatrix.multiply(translateM);
@@ -469,7 +468,7 @@ function renderScene(){
 }
 function renderAllShapes() {
   //var startTime = performance.now();
-  // Clear <canvas>
+    
   var globalRotMat=new Matrix4().rotate(gAnimalGlobalRotation,0,1,0);
   gl.uniformMatrix4fv(u_GlobalRotateMatrix,false,globalRotMat.elements);
 
@@ -535,25 +534,38 @@ function loadTexture(gl, n, texture, u_Sampler, image) {
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, n); // Draw the rectangle
 }
 
+function keydown(ev) {
+  if(ev.keyCode == 87) { // The w key was pressed
+    camera.eye.elements[2]+=.01;
+    camera.updateView();
+  } else 
+  if (ev.keyCode == 84) { // The s key was pressed
+    camera.eye.elements[2]-=.01;
+    camera.updateView();
+  } else { return; }
+  if (ev.keyCode == 81) { // The q key was pressed
+    camera.eye.elements[0]=.01;
+    camera.updateView();
+  } else { return; }
+  if (ev.keyCode == 69) { // The e key was pressed
+    camera.eye.elements[0]-=.01;
+    camera.updateView();
+  } else { return; }
+  initTextures(gl,0);
+}
 
 function main() {
   setupWebGL();
   connectVariablesToGLSL();
   addActionsForUI();
 
-  let ViewMatrix= new Matrix4();
+  camera=new Camera(canvas.width/canvas.height,.1,1000);
+  document.onkeydown=function(ev){keydown(ev);};
 
-  ViewMatrix.setLookAt(0,0,1,0,0,0,0,1,0);
-  gl.uniformMatrix4fv(u_ViewMatrix,false,ViewMatrix.elements);
-
-  let ProjectionMatrix= new Matrix4();
-  ProjectionMatrix.setPerspective(120,canvas.width/canvas.height,.1,200);
-  gl.uniformMatrix4fv(u_ProjectionMatrix,false,ProjectionMatrix.elements);
-  
   initTextures(gl,0);
+  gl.enable(gl.DEPTH_TEST);
   // Specify the color for clearing <canvas>  
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
-
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   requestAnimationFrame(tick);
