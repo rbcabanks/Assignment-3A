@@ -175,7 +175,6 @@ function connectVariablesToGLSL() {
     return;
   }
   
-
 }
 
 function updateAnimationAngles(){
@@ -187,6 +186,7 @@ function updateAnimationAngles(){
 }
 function renderScene(){
 
+  let translateAll=.8;
   var startTime=performance.now();
 
   updateAnimationAngles();
@@ -215,7 +215,7 @@ function renderScene(){
   ]);*/
 
 
-  translateM.setTranslate(0,.5,0);
+  translateM.setTranslate(0,.5,-translateAll);
   rotateM.setRotate(5,-.1,0,0);
   scaleM.setScale(.13,.1,.15);
   modelMatrix.multiply(translateM);
@@ -226,7 +226,7 @@ function renderScene(){
   //drawCube(modelMatrix);
   drawCubeUV(modelMatrix,uv);
   
-  translateM.setTranslate(0,.5,-.35);
+  translateM.setTranslate(0,.5,-.35-translateAll);
   //rotateM.setRotate(5,-.1,0,0);
   scaleM.setScale(1.1,.2,.2);
   modelMatrix.multiply(translateM);
@@ -240,7 +240,7 @@ function renderScene(){
   
 
   //beak (3)
-  translateM.setTranslate(0,.48,-.18);
+  translateM.setTranslate(0,.48,-.18-translateAll);
   rotateM.setRotate(-5,.1,0,0);
   scaleM.setScale(.07,.06,.03);
   modelMatrix.setIdentity();
@@ -251,7 +251,7 @@ function renderScene(){
   drawCube(modelMatrix);
 
   //beak (white front) (4)
-  translateM.setTranslate(0,.50,-.27);
+  translateM.setTranslate(0,.50,-.27-translateAll);
   rotateM.setRotate(-5,.1,0,0);
   scaleM.setScale(.07,.02,.07);
   modelMatrix.setIdentity();
@@ -262,7 +262,7 @@ function renderScene(){
   drawCube(modelMatrix);
 
   //beak (black) (5)
-  translateM.setTranslate(0,.42,-.3);
+  translateM.setTranslate(0,.42,-.3-translateAll);
   rotateM.setRotate(-5,.1,0,0);
   scaleM.setScale(.07,.07,.03);
   modelMatrix.setIdentity();
@@ -273,7 +273,7 @@ function renderScene(){
   drawCube(modelMatrix);
 
   //beak (black) (6)
-  translateM.setTranslate(0,.40,-.25);
+  translateM.setTranslate(0,.40,-.25-translateAll);
   rotateM.setRotate(-5,.1,0,0);
   scaleM.setScale(.07,.07,.06);
   modelMatrix.setIdentity();
@@ -285,7 +285,7 @@ function renderScene(){
   
 
   //neck (7)
-  translateM.setTranslate(0,.2,.025);
+  translateM.setTranslate(0,.2,.025-translateAll);
   rotateM.setRotate(10,.1,0,0);
   scaleM.setScale(.07,.27,.07);
   modelMatrix.setIdentity();
@@ -296,7 +296,7 @@ function renderScene(){
   drawCube(modelMatrix);
 
   //body (8)
-  translateM.setTranslate(0,-.06,.2);
+  translateM.setTranslate(0,-.06,.2-translateAll);
   scaleM.setScale(.165,.18,.26);
   modelMatrix.setIdentity();
   modelMatrix.multiply(translateM);
@@ -313,7 +313,7 @@ function renderScene(){
     moveUp=(wings-10)/1200;
   }
   //left wing bottom (9)
-  translateM.setTranslate(-.2-moveUp/2,-.04+moveUp,.2);
+  translateM.setTranslate(-.2-moveUp/2,-.04+moveUp,.2-translateAll);
   rotateM.setRotate(5+wings/2,0,0,-.15);
   scaleM.setScale(.02,.16,.26);
   modelMatrix.setIdentity();
@@ -324,7 +324,7 @@ function renderScene(){
   drawCube(modelMatrix);
 
   //right wing bottom (10)
-  translateM.setTranslate(.2+moveUp/2,-.04+moveUp,.2);
+  translateM.setTranslate(.2+moveUp/2,-.04+moveUp,.2-translateAll);
   rotateM.setRotate(-(5+wings/2),0,0,-.15);
   scaleM.setScale(.02,.16,.26);
   modelMatrix.setIdentity();
@@ -349,7 +349,7 @@ function renderScene(){
     moveBack=(g_rLeg-15)/500;
   }
 
-  translateM.setTranslate(.055,-.3,.25+(moveBack));
+  translateM.setTranslate(.055,-.3,.25+(moveBack)-translateAll);
   rotateM.setRotate(g_rLeg,-.5,0,0);
   scaleM.setScale(.03,.17,.03);
   modelMatrix.setIdentity();
@@ -363,7 +363,7 @@ function renderScene(){
   var rLegMatrix=new Matrix4();
   rLegMatrix.set(modelMatrix);
   rLegMatrix.scale(1.6,.28, 1.7);
-  rLegMatrix.translate(0,-2.6,0);
+  rLegMatrix.translate(0,-2.6,0-translateAll);
   rLegMatrix.rotate(g_rLeg/1.5,.5,0,0);
   rgba=[.8,.1,.6,1];
   drawCube(rLegMatrix);
@@ -385,7 +385,7 @@ function renderScene(){
     }
   }
 
-  translateM.setTranslate(.055,-.6+(checkgr),.25+(moveBottom));
+  translateM.setTranslate(.055,-.6+(checkgr),.25+(moveBottom)-translateAll);
   rotateM.setRotate(rotateNr,1,0,0);
   rLegMatrix.scale(.8,1, .8);
   modelMatrix.setIdentity();
@@ -398,7 +398,7 @@ function renderScene(){
   
   let footr=new Matrix4();
   footr.set(modelMatrix);
-  footr.translate(0,-1,-.9);
+  footr.translate(0,-1,-.9-translateAll);
   footr.scale(1,.1,3.1);
   rgba=[.6,.3,.6,1];
   drawCube(footr);
@@ -409,7 +409,7 @@ function renderScene(){
   rotateM.setIdentity();
 
   //left leg (14)
-  translateM.setTranslate(-.055,-.3,.25+(moveBackL));
+  translateM.setTranslate(-.055,-.3,.25+(moveBackL)-translateAll);
   rotateM.setRotate(g_lLeg,-.5,0,0);
   scaleM.setScale(.03,.17,.03);
   modelMatrix.setIdentity();
@@ -424,7 +424,7 @@ function renderScene(){
   var lLegMatrix=new Matrix4();
   lLegMatrix.set(modelMatrix);
   lLegMatrix.scale(1.6,.28, 1.8);
-  lLegMatrix.translate(0,-2.6,0);
+  lLegMatrix.translate(0,-2.6,0-translateAll);
   lLegMatrix.rotate(g_lLeg/1.5,.5,0,0);
   rgba=[.8,.1,.6,1];
   drawCube(lLegMatrix);
@@ -445,7 +445,7 @@ function renderScene(){
     }
   }
 
-  translateM.setTranslate(-.055,-.6+(checkg),.25+(moveBottomL));
+  translateM.setTranslate(-.055,-.6+(checkg),.25+(moveBottomL)-translateAll);
   rotateM.setRotate(rotateN,1,0,0);
   scaleM.setScale(.03,.17,.03);
   modelMatrix.setIdentity();
@@ -457,7 +457,7 @@ function renderScene(){
 
   let footl=new Matrix4();
   footl.set(modelMatrix);
-  footl.translate(0,-1,-.9);
+  footl.translate(0,-1,-.9-translateAll);
   footl.scale(1,.1,3.1);
   rgba=[.6,.3,.6,1];
   drawCube(footl);
@@ -470,7 +470,7 @@ function renderScene(){
 function renderAllShapes() {
   //var startTime = performance.now();
   // Clear <canvas>
-  var globalRotMat=new Matrix4().rotate(gAnimalGlobalRotation,0,-4,0);
+  var globalRotMat=new Matrix4().rotate(gAnimalGlobalRotation,0,1,0);
   gl.uniformMatrix4fv(u_GlobalRotateMatrix,false,globalRotMat.elements);
 
   var xformMatrix = new Matrix4();
@@ -542,14 +542,16 @@ function main() {
   addActionsForUI();
 
   let ViewMatrix= new Matrix4();
-  ViewMatrix.setLookAt(0,0,-.5,0,0,0,0,1,0);
+
+  ViewMatrix.setLookAt(0,0,1,0,0,0,0,1,0);
   gl.uniformMatrix4fv(u_ViewMatrix,false,ViewMatrix.elements);
 
   let ProjectionMatrix= new Matrix4();
+  ProjectionMatrix.setPerspective(120,canvas.width/canvas.height,.1,200);
   gl.uniformMatrix4fv(u_ProjectionMatrix,false,ProjectionMatrix.elements);
-  ProjectionMatrix.setPerspective(60,canvas.width/canvas.height,.1,100);
+  
   initTextures(gl,0);
-  // Specify the color for clearing <canvas>
+  // Specify the color for clearing <canvas>  
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
   // Clear <canvas>
