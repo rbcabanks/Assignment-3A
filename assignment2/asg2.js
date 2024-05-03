@@ -15,15 +15,32 @@ var VSHADER_SOURCE =
   '}\n';
 
 // Fragment shader program
-var FSHADER_SOURCE =
-  'precision mediump float;\n' +
-  'varying vec2 v_UV;\n'+
-  'uniform vec4 u_FragColor;\n' +  
-  'void main() {\n' +
-  '  gl_FragColor = u_FragColor;\n' +
-  '  gl_FragColor = vec4(v_UV,1.0,1.0);\n' +
-  '}\n';
+var FSHADER_SOURCE = `
+  precision mediump float;
+  varying vec2 v_UV;
+  uniform vec4 u_FragColor; 
+  uniform sampler2D u_Sampler0;
+  uniform int u_whichTexture;
+  uniform float u_texColorWeight;
+  void main() {
+    if(u_whichTexture == -2){
+      gl_FragColor = u_FragColor;
+    }
+    else if(u_whichTexture == -1){
+      gl_FragColor=vec4(v_UV,1,1);
+    }
+    else if(u_whichTexture == 0){
+      float t= u_texColorWeight;
+      vec4 texColor=texture2D(u_Sampler0,v_UV);
+      vec4 baseColor=vec4(0,1,0,1);
+      gl_FragColor = t*baseColor+t*texColor;
+    }
+    else{
+      gl_FragColor=vec4(1,.2,.2,1);
+    }
 
+  }`; 
+  
 // global variables
 const POINT = 0;
 const TRIANGLE = 1;
@@ -64,7 +81,9 @@ let rotateNr=0;
 let checkg=0;
 let rotateN=0;
 let moveBottomL;
+let u_Sampler0;
 
+let u_texColorWeight;
 let a_UV;
 
 
@@ -96,7 +115,7 @@ function setupWebGL() {
 function connectVariablesToGLSL() {
   // Initialize shaders
   if (!initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE)) {
-    console.log('Failed to intialize shaders.');
+    console.log('Failed to initialize shaders.');
     return;
   }
 
@@ -118,7 +137,16 @@ function connectVariablesToGLSL() {
     console.log('Failed to get the storage location of u_FragColor');
     return;
   }
-
+  u_texColorWeight = gl.getUniformLocation(gl.program, 'u_texColorWeight');
+  if (!u_texColorWeight) {
+    console.log('Failed to get the storage location of u_texColorWeight');
+    return;
+  }
+  u_whichTexture = gl.getUniformLocation(gl.program, 'u_whichTexture');
+  if (!u_whichTexture) {
+    console.log('Failed to get the storage location of u_whichTexture');
+    return;
+  }
   u_Size = gl.getUniformLocation(gl.program, 'u_Size');
   if (!u_Size) {
     console.log('Failed to get the storage location of u_Size');
@@ -134,6 +162,7 @@ function connectVariablesToGLSL() {
     console.log('Failed to get the storage location of u_GlobalRotateMatrix');
     return;
   }
+  
 
 }
 
@@ -150,6 +179,9 @@ function renderScene(){
 
   updateAnimationAngles();
   renderAllShapes();
+  
+  //gl.uniform1i(u_texColorWeight,0.8);
+
   let translateM= new Matrix4();
   let rotateM= new Matrix4();
   let scaleM= new Matrix4();
@@ -191,6 +223,7 @@ function renderScene(){
   rgba=[.01,.01,.01,1];
   //eyes (2)
 
+  gl.uniform1i(u_whichTexture,-2);
   drawCube(modelMatrix);
   
 
@@ -447,11 +480,55 @@ function sendTextToHTML(text,htmlID){
   }
   htmlElm.innerHTML=text;
 }
+
+//from textbook
+
+function initTextures(gl, n) {
+  var texture = gl.createTexture();   // Create a texture object
+  if (!texture) {
+    console.log('Failed to create the texture object');
+    return false;
+  }
+
+  var image = new Image();  // Create the image object
+  if (!image) {
+    console.log('Failed to create the image object');
+    return false;
+  }
+  // Register the event handler to be called on loading an image
+  image.onload = function(){ loadTexture(gl, n, texture, u_Sampler0, image); };
+  // Tell the browser to load an image
+  image.src = 'sky.jpg';
+
+  return true;
+}
+//send texture to glsl
+function loadTexture(gl, n, texture, u_Sampler, image) {
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1); // Flip the image's y axis
+  // Enable texture unit0
+  gl.activeTexture(gl.TEXTURE0);
+  // Bind the texture object to the target
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+
+  // Set the texture parameters
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  // Set the texture image
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
+  
+  // Set the texture unit 0 to the sampler
+  gl.uniform1i(u_Sampler, 0);
+  
+  gl.clear(gl.COLOR_BUFFER_BIT);   // Clear <canvas>
+
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, n); // Draw the rectangle
+}
+
+
 function main() {
   setupWebGL();
   connectVariablesToGLSL();
   addActionsForUI();
-  
+  initTextures(gl,0);
   // Specify the color for clearing <canvas>
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
 

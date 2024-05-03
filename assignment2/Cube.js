@@ -181,14 +181,6 @@ function drawCubeUV(vertices,uv) {
     1.0,1.0,-1.0,
     1.0, 1.0,1.0, // triangle 2 : end
   ]);
-  var face1  = new Float32Array([
-    1.0,-1.0,1.0, // triangle 1 : begin
-    1.0,-1.0,-1.0,
-    1.0, 1.0,-1.0, // triangle 1 : end
-    1.0, -1.0,1.0, // triangle 2 : begin
-    1.0,1.0,-1.0,
-    1.0, 1.0,1.0, // triangle 2 : end
-  ]);
 
   var face2  = new Float32Array([  
     -1.0,-1.0,-1.0,
@@ -307,7 +299,10 @@ function drawCubeUV(vertices,uv) {
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(face1),gl.DYNAMIC_DRAW);
     gl.vertexAttribPointer(a_Position,3,gl.FLOAT,false,0,0);
     gl.enableVertexAttribArray(a_Position);
-    //gl.uniform4f(u_FragColor, rgba[0]*.9, rgba[1]*.9, rgba[2]*.9, rgba[3]*.9);
+
+    gl.uniform1f(u_texColorWeight,0.8);
+
+    gl.uniform4f(u_FragColor, rgba[0]*.9, rgba[1]*.9, rgba[2]*.9, rgba[3]*.9);
     gl.uniformMatrix4fv(u_ModelMatrix,false,vertices.elements);
     setUV(uvBuffer,uv);
     gl.drawArrays(gl.TRIANGLES,0, face1.length/3);
@@ -317,7 +312,7 @@ function drawCubeUV(vertices,uv) {
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(face2),gl.DYNAMIC_DRAW);
     gl.vertexAttribPointer(a_Position,3,gl.FLOAT,false,0,0);
     gl.enableVertexAttribArray(a_Position);
-    //gl.uniform4f(u_FragColor, rgba[0]*.9, rgba[1]*.9, rgba[2]*.9, rgba[3]*.9);
+    gl.uniform4f(u_FragColor, rgba[0]*.9, rgba[1]*.9, rgba[2]*.9, rgba[3]*.9);
     gl.uniformMatrix4fv(u_ModelMatrix,false,vertices.elements);
     setUV(uvBuffer,uv);
     gl.drawArrays(gl.TRIANGLES,0, face2.length/3);
@@ -327,7 +322,7 @@ function drawCubeUV(vertices,uv) {
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(face3),gl.DYNAMIC_DRAW);
     gl.vertexAttribPointer(a_Position,3,gl.FLOAT,false,0,0);
     gl.enableVertexAttribArray(a_Position);
-    //gl.uniform4f(u_FragColor, rgba[0]*.9, rgba[1]*.9, rgba[2]*.9, rgba[3]*.9);
+    gl.uniform4f(u_FragColor, rgba[0]*.9, rgba[1]*.9, rgba[2]*.9, rgba[3]*.9);
     gl.uniformMatrix4fv(u_ModelMatrix,false,vertices.elements);
     setUV(uvBuffer,uv);
     gl.drawArrays(gl.TRIANGLES,0, face3.length/3);
@@ -337,7 +332,7 @@ function drawCubeUV(vertices,uv) {
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(face4),gl.DYNAMIC_DRAW);
     gl.vertexAttribPointer(a_Position,3,gl.FLOAT,false,0,0);
     gl.enableVertexAttribArray(a_Position);
-    //gl.uniform4f(u_FragColor, rgba[0]*.9, rgba[1]*.9, rgba[2]*.9, rgba[3]*.9);
+    gl.uniform4f(u_FragColor, rgba[0]*.9, rgba[1]*.9, rgba[2]*.9, rgba[3]*.9);
     gl.uniformMatrix4fv(u_ModelMatrix,false,vertices.elements);
     setUV(uvBuffer,uv);
     gl.drawArrays(gl.TRIANGLES,0, face4.length/3);
@@ -347,7 +342,7 @@ function drawCubeUV(vertices,uv) {
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(face5),gl.DYNAMIC_DRAW);
     gl.vertexAttribPointer(a_Position,3,gl.FLOAT,false,0,0);
     gl.enableVertexAttribArray(a_Position);
-    //gl.uniform4f(u_FragColor, rgba[0]*.9, rgba[1]*.9, rgba[2]*.9, rgba[3]*.9);
+    gl.uniform4f(u_FragColor, rgba[0]*.9, rgba[1]*.9, rgba[2]*.9, rgba[3]*.9);
     gl.uniformMatrix4fv(u_ModelMatrix,false,vertices.elements);
     setUV(uvBuffer,uv);
     gl.drawArrays(gl.TRIANGLES,0, face5.length/3);
@@ -358,7 +353,7 @@ function drawCubeUV(vertices,uv) {
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(face6),gl.DYNAMIC_DRAW);
     gl.vertexAttribPointer(a_Position,3,gl.FLOAT,false,0,0);
     gl.enableVertexAttribArray(a_Position);
-    //gl.uniform4f(u_FragColor, rgba[0]*.9, rgba[1]*.9, rgba[2]*.9, rgba[3]*.9);
+    gl.uniform4f(u_FragColor, rgba[0]*.9, rgba[1]*.9, rgba[2]*.9, rgba[3]*.9);
     gl.uniformMatrix4fv(u_ModelMatrix,false,vertices.elements);
     setUV(uvBuffer,uv);
     gl.drawArrays(gl.TRIANGLES,0, face6.length/3);
