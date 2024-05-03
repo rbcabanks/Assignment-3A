@@ -6,9 +6,11 @@ var VSHADER_SOURCE =
   'varying vec2 v_UV;\n' +
   'uniform mat4 u_ModelMatrix;\n' +
   'uniform mat4 u_GlobalRotateMatrix;\n' +
+  'uniform mat4 u_ViewMatrix;\n' +
+  'uniform mat4 u_ProjectionMatrix;\n' +
   'uniform float u_Size;\n' +
   'void main() {\n' +
-  '  gl_Position = u_GlobalRotateMatrix* u_ModelMatrix * a_Position;\n' +
+  '  gl_Position = u_ViewMatrix* u_ProjectionMatrix* u_GlobalRotateMatrix* u_ModelMatrix * a_Position;\n' +
   //'gl_Position =a_Position;\n'+
   '  gl_PointSize = u_Size;\n' +
   '  v_UV = a_UV; \n'+
@@ -162,15 +164,25 @@ function connectVariablesToGLSL() {
     console.log('Failed to get the storage location of u_GlobalRotateMatrix');
     return;
   }
+  u_ViewMatrix = gl.getUniformLocation(gl.program, 'u_ViewMatrix');
+  if (!u_ViewMatrix) {
+    console.log('Failed to get the storage location of u_ViewMatrix');
+    return;
+  }
+  u_ProjectionMatrix = gl.getUniformLocation(gl.program, 'u_ProjectionMatrix');
+  if (!u_ProjectionMatrix) {
+    console.log('Failed to get the storage location of u_ProjectionMatrix');
+    return;
+  }
   
 
 }
 
 function updateAnimationAngles(){
   if(animate==true){
-    g_rLeg=45*Math.sin(g_seconds+55.1);
-    wings=10*Math.sin(g_seconds);
-    g_lLeg=-45*Math.sin(g_seconds);
+    g_rLeg=45*Math.sin(g_seconds*6);
+    wings=10*Math.sin(g_seconds*2);
+    g_lLeg=-45*Math.sin(g_seconds*6);
   }
 }
 function renderScene(){
@@ -528,6 +540,14 @@ function main() {
   setupWebGL();
   connectVariablesToGLSL();
   addActionsForUI();
+
+  let ViewMatrix= new Matrix4();
+  ViewMatrix.setLookAt(0,0,-.5,0,0,0,0,1,0);
+  gl.uniformMatrix4fv(u_ViewMatrix,false,ViewMatrix.elements);
+
+  let ProjectionMatrix= new Matrix4();
+  gl.uniformMatrix4fv(u_ProjectionMatrix,false,ProjectionMatrix.elements);
+  ProjectionMatrix.setPerspective(60,canvas.width/canvas.height,.1,100);
   initTextures(gl,0);
   // Specify the color for clearing <canvas>
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -535,7 +555,7 @@ function main() {
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   requestAnimationFrame(tick);
-}
+} 
 
 var g_startTime=performance.now()/1000;
 var g_seconds=performance.now()/1000-g_startTime;
