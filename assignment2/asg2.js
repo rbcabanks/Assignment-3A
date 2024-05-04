@@ -186,7 +186,7 @@ function updateAnimationAngles(){
 }
 function renderScene(){
 
-  let translateAll=5;
+  let translateAll=3;
   var startTime=performance.now();
   updateAnimationAngles();
   renderAllShapes();
@@ -224,8 +224,7 @@ function renderScene(){
   //head (1)
   //drawCube(modelMatrix);
   drawCubeUV(modelMatrix,uv);
-  
-  translateM.setTranslate(0,.5,.1-translateAll);
+  translateM.setTranslate(0,.5,2.3-translateAll);
   //rotateM.setRotate(5,-.1,0,0);
   scaleM.setScale(1.1,.2,.2);
   modelMatrix.multiply(translateM);
