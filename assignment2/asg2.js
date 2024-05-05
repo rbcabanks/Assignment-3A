@@ -544,7 +544,7 @@ function keydown(ev) {
     camera.moveForward();
   } else 
   if (ev.keyCode == 84) { // The s key was pressed
-    camera.moveBack();
+    camera.moveBackward();
   } else { return; }
   if (ev.keyCode == 81) { // The q key was pressed
     camera.moveLeft();

@@ -22,17 +22,30 @@ class Camera {
   }
   moveForward(){
     console.log("k")
+    console.log("at",this.at);
     var f= new Vector3();
-    f.set(this.at);
+    f=this.at;
+    console.log("f",f);
+    //f.set(this.at);
+    console.log("eye",this.eye);
     f.sub(this.eye);
+  
+
+    console.log("sub f",f);
+   
     f.normalize();
+    console.log("norm f",f);
     f.mul(3);
+    console.log("mult f",f);
 
     this.eye.add(f);
+    console.log("eye",this.eye);
     this.at.add(f);
+    console.log("at",this.at);
     
   }
   moveBackward(){
+    /*
       var f= new Vector3();
       f.set(this.eye);
       f.sub(this.at);
@@ -41,6 +54,9 @@ class Camera {
 
       this.eye.add(f);
       this.at.add(f);
+      console.log(this.at);*/
+    console.log("S");
+    this.eye.elements[0]+=.01;
   }
   moveLeft(){
 
