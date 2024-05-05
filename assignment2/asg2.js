@@ -90,9 +90,9 @@ let a_UV;
 
 
 
-let gAnimalGlobalRotation=0;
+let gAnimalGlobalRotation=-40;
 function addActionsForUI() { // used this resource "https://www.w3schools.com/howto/howto_js_rangeslider.asp"
- document.getElementById('camera').addEventListener('mousemove', function () {gAnimalGlobalRotation=this.value; renderScene();}); //g_selectedColor[0]=this.value/100;
+ //document.getElementById('camera').addEventListener('mousemove', function () {gAnimalGlobalRotation=this.value; renderScene();}); //g_selectedColor[0]=this.value/100;
  document.getElementById('rLeg').addEventListener('mousemove', function () {g_rLeg=this.value; renderScene();}); //g_selectedColor[0]=this.value/100;
  document.getElementById('lLeg').addEventListener('mousemove', function () {g_lLeg=this.value; renderScene();}); //g_selectedColor[0]=this.value/100;
  document.getElementById('wings').addEventListener('mousemove', function () {wings=this.value; renderScene();}); //g_selectedColor[0]=this.value/100;
@@ -186,7 +186,7 @@ function updateAnimationAngles(){
 }
 function renderScene(){
 
-  let translateAll=3;
+  let translateAll=0;
   var startTime=performance.now();
   updateAnimationAngles();
   renderAllShapes();
@@ -202,19 +202,22 @@ function renderScene(){
     0,0,0,1,1,1,
     0,0,1,1,1,0,
   ]
-  /*
-  scaleM.setScale(.4,.4,.4);
-  rgba=[1,.1,.7,1];
-  let modelMatrix=new Matrix4();
+  
+  translateM.setTranslate(0,-.77,0);
+  modelMatrix.multiply(translateM);
+  scaleM.setScale(30,.01,32);
   modelMatrix.multiply(scaleM);
+  translateM.setTranslate(-.5,0,-.5);
+  modelMatrix.multiply(translateM);
+  rgba=[.1,.1,.7,1];
+  //let modelMatrix=new Matrix4();
+  drawCube(modelMatrix);
 
-  drawCubeUV(modelMatrix,[
-    0,0,0,1,1,1,
-    0,0,1,1,1,0,
-  ]);*/
+  modelMatrix = new Matrix4();
+  translateM=new Matrix4();
+  scaleM= new Matrix4();
 
-
-  translateM.setTranslate(0,.5,-translateAll);
+  translateM.setTranslate(0,.5,+translateAll);
   rotateM.setRotate(5,-.1,0,0);
   scaleM.setScale(.13,.1,.15);
   modelMatrix.multiply(translateM);
@@ -224,7 +227,7 @@ function renderScene(){
   //head (1)
   //drawCube(modelMatrix);
   drawCubeUV(modelMatrix,uv);
-  translateM.setTranslate(0,.5,2.3-translateAll);
+  translateM.setTranslate(0,.5,-.3+translateAll);
   //rotateM.setRotate(5,-.1,0,0);
   scaleM.setScale(1.1,.2,.2);
   modelMatrix.multiply(translateM);
@@ -238,7 +241,7 @@ function renderScene(){
   
 
   //beak (3)
-  translateM.setTranslate(0,.48,-.18-translateAll);
+  translateM.setTranslate(0,.48,-.18+translateAll);
   rotateM.setRotate(-5,.1,0,0);
   scaleM.setScale(.07,.06,.03);
   modelMatrix.setIdentity();
@@ -249,7 +252,7 @@ function renderScene(){
   drawCube(modelMatrix);
 
   //beak (white front) (4)
-  translateM.setTranslate(0,.50,-.27-translateAll);
+  translateM.setTranslate(0,.50,-.27+translateAll);
   rotateM.setRotate(-5,.1,0,0);
   scaleM.setScale(.07,.02,.07);
   modelMatrix.setIdentity();
@@ -260,7 +263,7 @@ function renderScene(){
   drawCube(modelMatrix);
 
   //beak (black) (5)
-  translateM.setTranslate(0,.42,-.3-translateAll);
+  translateM.setTranslate(0,.42,-.3+translateAll);
   rotateM.setRotate(-5,.1,0,0);
   scaleM.setScale(.07,.07,.03);
   modelMatrix.setIdentity();
@@ -271,7 +274,7 @@ function renderScene(){
   drawCube(modelMatrix);
 
   //beak (black) (6)
-  translateM.setTranslate(0,.40,-.25-translateAll);
+  translateM.setTranslate(0,.40,-.25+translateAll);
   rotateM.setRotate(-5,.1,0,0);
   scaleM.setScale(.07,.07,.06);
   modelMatrix.setIdentity();
@@ -283,7 +286,7 @@ function renderScene(){
   
 
   //neck (7)
-  translateM.setTranslate(0,.2,.025-translateAll);
+  translateM.setTranslate(0,.2,.025+translateAll);
   rotateM.setRotate(10,.1,0,0);
   scaleM.setScale(.07,.27,.07);
   modelMatrix.setIdentity();
@@ -294,7 +297,7 @@ function renderScene(){
   drawCube(modelMatrix);
 
   //body (8)
-  translateM.setTranslate(0,-.06,.2-translateAll);
+  translateM.setTranslate(0,-.06,.2+translateAll);
   scaleM.setScale(.165,.18,.26);
   modelMatrix.setIdentity();
   modelMatrix.multiply(translateM);
@@ -311,7 +314,7 @@ function renderScene(){
     moveUp=(wings-10)/1200;
   }
   //left wing bottom (9)
-  translateM.setTranslate(-.2-moveUp/2,-.04+moveUp,.2-translateAll);
+  translateM.setTranslate(-.2-moveUp/2,-.04+moveUp,.2+translateAll);
   rotateM.setRotate(5+wings/2,0,0,-.15);
   scaleM.setScale(.02,.16,.26);
   modelMatrix.setIdentity();
@@ -322,7 +325,7 @@ function renderScene(){
   drawCube(modelMatrix);
 
   //right wing bottom (10)
-  translateM.setTranslate(.2+moveUp/2,-.04+moveUp,.2-translateAll);
+  translateM.setTranslate(.2+moveUp/2,-.04+moveUp,.2+translateAll);
   rotateM.setRotate(-(5+wings/2),0,0,-.15);
   scaleM.setScale(.02,.16,.26);
   modelMatrix.setIdentity();
@@ -347,7 +350,7 @@ function renderScene(){
     moveBack=(g_rLeg-15)/500;
   }
 
-  translateM.setTranslate(.055,-.3,.25+(moveBack)-translateAll);
+  translateM.setTranslate(.055,-.3,.25+(moveBack)+translateAll);
   rotateM.setRotate(g_rLeg,-.5,0,0);
   scaleM.setScale(.03,.17,.03);
   modelMatrix.setIdentity();
@@ -361,7 +364,7 @@ function renderScene(){
   var rLegMatrix=new Matrix4();
   rLegMatrix.set(modelMatrix);
   rLegMatrix.scale(1.6,.28, 1.7);
-  rLegMatrix.translate(0,-2.6,0-translateAll);
+  rLegMatrix.translate(0,-2.6,0+translateAll);
   rLegMatrix.rotate(g_rLeg/1.5,.5,0,0);
   rgba=[.8,.1,.6,1];
   drawCube(rLegMatrix);
@@ -383,7 +386,7 @@ function renderScene(){
     }
   }
 
-  translateM.setTranslate(.055,-.6+(checkgr),.25+(moveBottom)-translateAll);
+  translateM.setTranslate(.055,-.6+(checkgr),.25+(moveBottom)+translateAll);
   rotateM.setRotate(rotateNr,1,0,0);
   rLegMatrix.scale(.8,1, .8);
   modelMatrix.setIdentity();
@@ -396,7 +399,7 @@ function renderScene(){
   
   let footr=new Matrix4();
   footr.set(modelMatrix);
-  footr.translate(0,-1,-.9-translateAll);
+  footr.translate(0,-1,-.9+translateAll);
   footr.scale(1,.1,3.1);
   rgba=[.6,.3,.6,1];
   drawCube(footr);
@@ -467,8 +470,10 @@ function renderScene(){
 }
 function renderAllShapes() {
   //var startTime = performance.now();
-    
-  var globalRotMat=new Matrix4().rotate(gAnimalGlobalRotation,0,1,0);
+  
+  //var globalRotMat=new Matrix4().rotate(gAnimalGlobalRotation,0,1,0);
+  var globalRotMat=new Matrix4().rotate(30,-1,-4,0);
+
   gl.uniformMatrix4fv(u_GlobalRotateMatrix,false,globalRotMat.elements);
 
   var xformMatrix = new Matrix4();
@@ -535,20 +540,16 @@ function loadTexture(gl, n, texture, u_Sampler, image) {
 
 function keydown(ev) {
   if(ev.keyCode == 87) { // The w key was pressed
-    camera.eye.elements[2]+=.01;
-    camera.updateView();
+    camera.moveForward();
   } else 
   if (ev.keyCode == 84) { // The s key was pressed
-    camera.eye.elements[2]-=.01;
-    camera.updateView();
+    camera.moveBack();
   } else { return; }
   if (ev.keyCode == 81) { // The q key was pressed
-    camera.eye.elements[0]=.01;
-    camera.updateView();
+    camera.moveLeft();
   } else { return; }
   if (ev.keyCode == 69) { // The e key was pressed
-    camera.eye.elements[0]-=.01;
-    camera.updateView();
+    camera.moveRight();
   } else { return; }
   initTextures(gl,0);
 }
@@ -560,6 +561,10 @@ function main() {
 
   camera=new Camera(canvas.width/canvas.height,.1,1000);
   document.onkeydown=function(ev){keydown(ev);};
+
+  gl.uniformMatrix4fv(u_ViewMatrix,false,camera.viewMatrix.elements);
+  gl.uniformMatrix4fv(u_ProjectionMatrix,false,camera.projectionMatrix.elements);
+
 
   initTextures(gl,0);
   gl.enable(gl.DEPTH_TEST);
