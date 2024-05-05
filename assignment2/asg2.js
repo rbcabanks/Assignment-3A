@@ -90,7 +90,7 @@ let a_UV;
 
 
 
-let gAnimalGlobalRotation=-40;
+let gAnimalGlobalRotation=0; // was 40
 function addActionsForUI() { // used this resource "https://www.w3schools.com/howto/howto_js_rangeslider.asp"
  //document.getElementById('camera').addEventListener('mousemove', function () {gAnimalGlobalRotation=this.value; renderScene();}); //g_selectedColor[0]=this.value/100;
  document.getElementById('rLeg').addEventListener('mousemove', function () {g_rLeg=this.value; renderScene();}); //g_selectedColor[0]=this.value/100;
@@ -203,9 +203,9 @@ function renderScene(){
     0,0,1,1,1,0,
   ]
   
-  translateM.setTranslate(0,-.77,0);
+  translateM.setTranslate(0,-1.8,0);
   modelMatrix.multiply(translateM);
-  scaleM.setScale(30,.01,32);
+  scaleM.setScale(30,1,32);
   modelMatrix.multiply(scaleM);
   translateM.setTranslate(-.5,0,-.5);
   modelMatrix.multiply(translateM);
@@ -471,8 +471,9 @@ function renderScene(){
 function renderAllShapes() {
   //var startTime = performance.now();
   
-  //var globalRotMat=new Matrix4().rotate(gAnimalGlobalRotation,0,1,0);
-  var globalRotMat=new Matrix4().rotate(30,-1,-4,0);
+  var globalRotMat=new Matrix4().rotate(gAnimalGlobalRotation,0,1,0);
+  //var globalRotMat=new Matrix4().rotate(0,0,0,0);
+  //var globalRotMat=new Matrix4().rotate(30,-1,-4,0);
 
   gl.uniformMatrix4fv(u_GlobalRotateMatrix,false,globalRotMat.elements);
 
@@ -562,8 +563,8 @@ function main() {
   camera=new Camera(canvas.width/canvas.height,.1,1000);
   document.onkeydown=function(ev){keydown(ev);};
 
-  gl.uniformMatrix4fv(u_ViewMatrix,false,camera.viewMatrix.elements);
-  gl.uniformMatrix4fv(u_ProjectionMatrix,false,camera.projectionMatrix.elements);
+  //gl.uniformMatrix4fv(u_ViewMatrix,false,camera.viewMatrix.elements);
+  //gl.uniformMatrix4fv(u_ProjectionMatrix,false,camera.projectionMatrix.elements);
 
 
   initTextures(gl,0);
