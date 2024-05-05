@@ -129,6 +129,7 @@ function drawCube(vertices) {
       console.log('Failed to get the storage location of a_Position');
       return -1;
     }
+    //console.log("rgba",rgba);
     //Assign buffer object to a_Position variable
     gl.vertexAttribPointer(a_Position,3,gl.FLOAT,false,0,0);
 
@@ -146,22 +147,22 @@ function drawCube(vertices) {
     gl.drawArrays(gl.TRIANGLES,0, face2.length/3);
 
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(face3),gl.DYNAMIC_DRAW);
-    gl.uniform4f(u_FragColor, rgba[0]*.7, rgba[1]*.7, rgba[2]*.7, rgba[3]*.7);
+    gl.uniform4f(u_FragColor, rgba[0]*.7, rgba[1]*.7, rgba[2]*.7, rgba[3]);
     gl.uniformMatrix4fv(u_ModelMatrix,false,vertices.elements);
     gl.drawArrays(gl.TRIANGLES,0, face3.length/3);
 
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(face4),gl.DYNAMIC_DRAW);
-    gl.uniform4f(u_FragColor, rgba[0]*.6, rgba[1]*.6, rgba[2]*.6, rgba[3]*.6);
+    gl.uniform4f(u_FragColor, rgba[0]*.6, rgba[1]*.6, rgba[2]*.6, rgba[3]);
     gl.uniformMatrix4fv(u_ModelMatrix,false,vertices.elements);
     gl.drawArrays(gl.TRIANGLES,0, face4.length/3);
 
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(face5),gl.DYNAMIC_DRAW);
-    gl.uniform4f(u_FragColor, rgba[0]*.5, rgba[1]*.5, rgba[2]*.5, rgba[3]*.5);
+    gl.uniform4f(u_FragColor, rgba[0]*.5, rgba[1]*.5, rgba[2]*.5, rgba[3]);
     gl.uniformMatrix4fv(u_ModelMatrix,false,vertices.elements);
     gl.drawArrays(gl.TRIANGLES,0, face5.length/3);
 
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(face6),gl.DYNAMIC_DRAW);
-    gl.uniform4f(u_FragColor, rgba[0]*.4, rgba[1]*.4, rgba[2]*.4, rgba[3]*.4);
+    gl.uniform4f(u_FragColor, rgba[0]*.4, rgba[1]*.4, rgba[2]*.4, rgba[3]);
     gl.uniformMatrix4fv(u_ModelMatrix,false,vertices.elements);
     gl.drawArrays(gl.TRIANGLES,0, face6.length/3);
 }

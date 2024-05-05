@@ -22,6 +22,7 @@ var FSHADER_SOURCE = `
   varying vec2 v_UV;
   uniform vec4 u_FragColor; 
   uniform sampler2D u_Sampler0;
+  uniform sampler2D u_Sampler1;
   uniform int u_whichTexture;
   uniform float u_texColorWeight;
   void main() {
@@ -34,7 +35,13 @@ var FSHADER_SOURCE = `
     else if(u_whichTexture == 0){
       float t= u_texColorWeight;
       vec4 texColor=texture2D(u_Sampler0,v_UV);
-      vec4 baseColor=vec4(0,1,0,.1);
+      vec4 baseColor=vec4(0,0,1,1);
+      gl_FragColor = t*baseColor+t*texColor;
+    }
+    else if(u_whichTexture == -3){
+      float t= u_texColorWeight;
+      vec4 texColor=texture2D(u_Sampler1,v_UV);
+      vec4 baseColor=vec4(0,0,.1,1);
       gl_FragColor = t*baseColor+t*texColor;
     }
     else{
@@ -84,13 +91,14 @@ let checkg=0;
 let rotateN=0;
 let moveBottomL;
 let u_Sampler0;
+let u_Sampler1;
 
 let u_texColorWeight;
 let a_UV;
 
 
 
-let gAnimalGlobalRotation=0; // was 40
+let gAnimalGlobalRotation=120; // was 40
 function addActionsForUI() { // used this resource "https://www.w3schools.com/howto/howto_js_rangeslider.asp"
  document.getElementById('camera').addEventListener('mousemove', function () {gAnimalGlobalRotation=this.value; renderScene();}); //g_selectedColor[0]=this.value/100;
  document.getElementById('rLeg').addEventListener('mousemove', function () {g_rLeg=this.value; renderScene();}); //g_selectedColor[0]=this.value/100;
@@ -198,34 +206,30 @@ function renderScene(){
   let scaleM= new Matrix4();
   let modelMatrix = new Matrix4();
 
-  
-  let uv=[
-    0,0,0,1,1,1,
-    0,0,1,1,1,0,
-  ]
+//floor
 
-  /*translateM.setTranslate(0,-2,0);
-  modelMatrix.multiply(translateM);*/
-  scaleM.setScale(50,.1,50);
-  modelMatrix.multiply(scaleM);
-  translateM.setTranslate(0,-20,0);
-  modelMatrix.multiply(translateM);
-  rgba=[.1,.2,.0,1];
+let uv=[
+  0,0,0,1,1,1,
+  0,0,1,1,1,0,
+]
 
-  gl.uniform1i(u_whichTexture,-2);
-  drawCubeUV(modelMatrix,uv);
+let modelMatrix1=new Matrix4();
+scaleM.setScale(50,.1,50);
+modelMatrix1.multiply(scaleM);
+translateM.setTranslate(0,-20,0);
+modelMatrix1.multiply(translateM);
+rgba=[0.0,0.2,0.5,1.0];
+gl.uniform1i(u_whichTexture,-3);
+//gl.activeTexture(gl.TEXTURE1);
+drawCubeUV(modelMatrix1,uv);
 
-  
 //sky
-
   modelMatrix=new Matrix4();
   scaleM.setScale(1000,1000,1000);
   modelMatrix.multiply(scaleM);
   translateM.setTranslate(0,.5,0);
   modelMatrix.multiply(translateM);
-  //rgba=[0,0,1,.3];
-
-  gl.uniform1i(u_whichTexture,-1);
+  gl.uniform1i(u_whichTexture,0);
   drawCubeUV(modelMatrix,uv);
 
   // cube
@@ -237,40 +241,94 @@ function renderScene(){
   modelMatrix.multiply(translateM);
 
   rgba=[0,.0,1,1];
-  gl.uniform1i(u_whichTexture,0);
+  gl.uniform1i(u_whichTexture,-2);
   drawCube(modelMatrix);
 
+  // floating cube
+  modelMatrix=new Matrix4();
+  scaleM.setScale(.3,.3,.3);
+  modelMatrix.multiply(scaleM);
+  translateM.setTranslate(6,0,3);
+  modelMatrix.multiply(translateM);
+
+  rgba=[0,.0,1,1];
+  gl.uniform1i(u_whichTexture,-3);
+  drawCube(modelMatrix);
 
   var g_map=[
-  [1,1,1,1,1,1,1,1],
-  [1,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,1],
-  [1,0,0,1,1,0,0,1],
-  [1,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,1],
-  [1,0,0,0,1,0,0,1],
-  [1,0,0,0,0,0,0,1],
-];
-
-drawMap(g_map);
-  /*var duration = performance.now()-startTime;
-  sendTextToHTML(("ms:" + Math.floor(duration)+" fps:"+ Math.floor(10000/duration)/10), "numdot")
-*/
-}
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,1],
+    [1,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1],
+    [1,0,0,0,0,0,0,1,1,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1],
+    [1,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,0,0,1,0,0,0,0,0,1],
+    [1,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,1],
+    [1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,0,1,1,1,1,1,1,1],
+    [1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,1,0,0,0,1,1,1,1,1,1,1],
+    [1,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+    [1,0,1,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+    [1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+    [1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1],
+    [1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1],
+    [1,0,0,0,0,1,0,0,0,1,1,1,1,1,0,0,0,1,0,0,0,1,0,0,0,1,1,1,0,0,0,1],
+    [1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,1,0,0,0,1,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+    [1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1],
+    [1,0,0,0,0,1,1,1,0,0,0,1,1,1,1,1,1,0,0,0,0,1,0,0,0,1,1,1,0,0,0,1],
+    [1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1],
+    [1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,1],
+    [1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,1],
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
+  ];
+  
+  drawMap(g_map);
+    /*var duration = performance.now()-startTime;
+    sendTextToHTML(("ms:" + Math.floor(duration)+" fps:"+ Math.floor(10000/duration)/10), "numdot")
+  */
+  }
+  
 function drawMap(g_map){
-  for (x=0;x<8;x++){
-    for(y=0;y<8;y++){
+  for (x=0;x<32;x++){
+    for(y=0;y<32;y++){
       if(g_map[x][y]==1){
         var body = new Matrix4();
-        body.setTranslate(x-5,-.75,y-4);
-        rgba=[0,.0,1,1];
-        
-        gl.uniform1i(u_whichTexture,-2);
-        drawCube(body);
+        body.setTranslate(x-2,-.75,y-2);
+        var scaleM=new Matrix4();
+        scaleM.setScale(.5,2,.5);
+        body.multiply(scaleM);
+
+        if((x==0 && y==0)||(x==0 && y==1)||(x==0 && y==2)){
+          rgba=[1,.0,0,1];
+          gl.uniform1i(u_whichTexture,-2);
+          drawCube(body);
+        }
+        else if((x==32 && y==30)||(x==32 && y==31)||(x==32 && y==32)){
+          rgba=[1,.0,0,1];
+          gl.uniform1i(u_whichTexture,-2);
+          drawCube(body);
+        }
+        else{
+          let uv=[
+            0,0, 0,.5, .5,.5,
+            0,0,.5,.5, 1,0,
+          ]
+          gl.uniform1i(u_whichTexture,-1);
+          drawCubeUV(body,uv);
+        }
       }
     }
   }
 }
+
 function renderAllShapes() {
   //var startTime = performance.now();
   
@@ -302,9 +360,11 @@ function sendTextToHTML(text,htmlID){
 
 //from textbook
 
-function initTextures(gl, n, imgSource) {
+function initTextures(gl, n) {
   var texture = gl.createTexture();   // Create a texture object
-  if (!texture) {
+  var texture2 = gl.createTexture();
+
+  if (!texture || !texture2) {
     console.log('Failed to create the texture object');
     return false;
   }
@@ -314,33 +374,55 @@ function initTextures(gl, n, imgSource) {
     console.log('Failed to create the image object');
     return false;
   }
+  var image1 = new Image();  // Create the image object
+  if (!image1) {
+    console.log('Failed to create the image object');
+    return false;
+  }
+
+  var u_Sampler0=gl.getUniformLocation(gl.program,"u_Sampler0");
+  var u_Sampler1=gl.getUniformLocation(gl.program,"u_Sampler1");
+
   // Register the event handler to be called on loading an image
-  image.onload = function(){ loadTexture(gl, n, texture, u_Sampler0, image); };
+  image.onload = function(){ loadTexture(gl, n, texture, u_Sampler0, image,0); };
+  image1.onload = function(){ loadTexture(gl, n, texture2, u_Sampler1, image1,1); };
+
+
   // Tell the browser to load an image
-  image.src = imgSource;
+  image.src = 'sky_cloud.jpg';
+  image1.src = 'redflower.jpg';
 
   return true;
 }
 //send texture to glsl
-function loadTexture(gl, n, texture, u_Sampler, image) {
+function loadTexture(gl, n, texture, u_Sampler, image, texUnit) {
   gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1); // Flip the image's y axis
   // Enable texture unit0
-  gl.activeTexture(gl.TEXTURE0);
+  if(texUnit==0){
+    gl.activeTexture(gl.TEXTURE0);
+    g_texUnit_0=true;
+  }
+  else{
+    gl.activeTexture(gl.TEXTURE1);
+    g_texUnit_1=true;
+  }
+  
   // Bind the texture object to the target
   gl.bindTexture(gl.TEXTURE_2D, texture);
-
   // Set the texture parameters
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
   // Set the texture image
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
   
-  // Set the texture unit 0 to the sampler
-  gl.uniform1i(u_Sampler, 0);
+  // Set the texture unit to the sampler
+  gl.uniform1i(u_Sampler, texUnit);
   
   gl.clear(gl.COLOR_BUFFER_BIT);   // Clear <canvas>
 
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, n); // Draw the rectangle
+
 }
+
 
 function keydown(ev) {
   if(ev.keyCode == 87) { // The w key was pressed
@@ -355,7 +437,7 @@ function keydown(ev) {
   if (ev.keyCode == 69) { // The e key was pressed
     camera.moveRight();
   } else { return; }
-  initTextures(gl,0,'hedge_11zon.jpeg');
+  initTextures(gl,0);
 }
 
 function main() {
@@ -368,9 +450,10 @@ function main() {
 
   //gl.uniformMatrix4fv(u_ViewMatrix,false,camera.viewMatrix.elements);
   //gl.uniformMatrix4fv(u_ProjectionMatrix,false,camera.projectionMatrix.elements);
+  
+  initTextures(gl,0);
 
 
-  initTextures(gl,0,'hedge_11zon.jpeg');
   gl.enable(gl.DEPTH_TEST);
   // Specify the color for clearing <canvas>  
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -379,11 +462,11 @@ function main() {
   requestAnimationFrame(tick);
 } 
 
-var g_startTime=performance.now()/1000;
-var g_seconds=performance.now()/1000-g_startTime;
+var g_startTime=performance.now()/240;
+var g_seconds=performance.now()/240-g_startTime;
 
 function tick(){
-  g_seconds=performance.now()/1000-g_startTime;
+  g_seconds=performance.now()/240-g_startTime;
   renderScene();
   requestAnimationFrame(tick);
 }
