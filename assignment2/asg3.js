@@ -34,7 +34,7 @@ var FSHADER_SOURCE = `
     else if(u_whichTexture == 0){
       float t= u_texColorWeight;
       vec4 texColor=texture2D(u_Sampler0,v_UV);
-      vec4 baseColor=vec4(0,0,0,1);
+      vec4 baseColor=vec4(0,1,0,.1);
       gl_FragColor = t*baseColor+t*texColor;
     }
     else{
@@ -223,10 +223,10 @@ function renderScene(){
   modelMatrix.multiply(scaleM);
   translateM.setTranslate(0,.5,0);
   modelMatrix.multiply(translateM);
-  rgba=[0,0,1,.8];
+  //rgba=[0,0,1,.3];
 
-  gl.uniform1i(u_whichTexture,-2);
-  drawCube(modelMatrix);
+  gl.uniform1i(u_whichTexture,-1);
+  drawCubeUV(modelMatrix,uv);
 
   // cube
 
@@ -237,12 +237,39 @@ function renderScene(){
   modelMatrix.multiply(translateM);
 
   rgba=[0,.0,1,1];
-  gl.uniform1i(u_whichTexture,-2);
+  gl.uniform1i(u_whichTexture,0);
   drawCube(modelMatrix);
 
-  var duration = performance.now()-startTime;
-  sendTextToHTML(("ms:" + Math.floor(duration)+" fps:"+ Math.floor(10000/duration)/10), "numdot")
 
+  var g_map=[
+  [1,1,1,1,1,1,1,1],
+  [1,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,1],
+  [1,0,0,1,1,0,0,1],
+  [1,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,1],
+  [1,0,0,0,1,0,0,1],
+  [1,0,0,0,0,0,0,1],
+];
+
+drawMap(g_map);
+  /*var duration = performance.now()-startTime;
+  sendTextToHTML(("ms:" + Math.floor(duration)+" fps:"+ Math.floor(10000/duration)/10), "numdot")
+*/
+}
+function drawMap(g_map){
+  for (x=0;x<8;x++){
+    for(y=0;y<8;y++){
+      if(g_map[x][y]==1){
+        var body = new Matrix4();
+        body.setTranslate(x-5,-.75,y-4);
+        rgba=[0,.0,1,1];
+        
+        gl.uniform1i(u_whichTexture,-2);
+        drawCube(body);
+      }
+    }
+  }
 }
 function renderAllShapes() {
   //var startTime = performance.now();
@@ -328,7 +355,7 @@ function keydown(ev) {
   if (ev.keyCode == 69) { // The e key was pressed
     camera.moveRight();
   } else { return; }
-  initTextures(gl,0,'sky.jpg');
+  initTextures(gl,0,'hedge_11zon.jpeg');
 }
 
 function main() {
@@ -343,7 +370,7 @@ function main() {
   //gl.uniformMatrix4fv(u_ProjectionMatrix,false,camera.projectionMatrix.elements);
 
 
-  initTextures(gl,0,'sky.jpg');
+  initTextures(gl,0,'hedge_11zon.jpeg');
   gl.enable(gl.DEPTH_TEST);
   // Specify the color for clearing <canvas>  
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
