@@ -34,7 +34,7 @@ var FSHADER_SOURCE = `
     else if(u_whichTexture == 0){
       float t= u_texColorWeight;
       vec4 texColor=texture2D(u_Sampler0,v_UV);
-      vec4 baseColor=vec4(0,1,0,1);
+      vec4 baseColor=vec4(0,0,0,1);
       gl_FragColor = t*baseColor+t*texColor;
     }
     else{
@@ -199,45 +199,32 @@ function renderScene(){
   let modelMatrix = new Matrix4();
 
   
+  let uv=[
+    0,0,0,1,1,1,
+    0,0,1,1,1,0,
+  ]
+
   /*translateM.setTranslate(0,-2,0);
   modelMatrix.multiply(translateM);*/
-  scaleM.setScale(20,.4,20);
+  scaleM.setScale(50,.1,50);
   modelMatrix.multiply(scaleM);
-  translateM.setTranslate(0,-5,-1.3);
+  translateM.setTranslate(0,-20,0);
   modelMatrix.multiply(translateM);
-  rgba=[.1,.1,.7,1];
+  rgba=[.1,.2,.0,1];
 
   gl.uniform1i(u_whichTexture,-2);
-  drawCube(modelMatrix);
+  drawCubeUV(modelMatrix,uv);
+
   
-//walls
-  modelMatrix=new Matrix4();
-  scaleM.setScale(1,1,13);
-  modelMatrix.multiply(scaleM);
-  translateM.setTranslate(-9,0,-1);
-  modelMatrix.multiply(translateM);
-
-  rgba=[0,1,0,1];
-  gl.uniform1i(u_whichTexture,-2);
-  drawCube(modelMatrix);
+//sky
 
   modelMatrix=new Matrix4();
-  scaleM.setScale(1,1,13);
+  scaleM.setScale(1000,1000,1000);
   modelMatrix.multiply(scaleM);
-  translateM.setTranslate(9,0,-1);
+  translateM.setTranslate(0,.5,0);
   modelMatrix.multiply(translateM);
+  rgba=[0,0,1,.8];
 
-  rgba=[0,1,0,1];
-  gl.uniform1i(u_whichTexture,-2);
-  drawCube(modelMatrix);
-
-  modelMatrix=new Matrix4();
-  scaleM.setScale(13,1,1);
-  modelMatrix.multiply(scaleM);
-  translateM.setTranslate(0,0,-27);
-  modelMatrix.multiply(translateM);
-
-  rgba=[0,1,0,1];
   gl.uniform1i(u_whichTexture,-2);
   drawCube(modelMatrix);
 
@@ -246,10 +233,10 @@ function renderScene(){
   modelMatrix=new Matrix4();
   scaleM.setScale(1,1,1);
   modelMatrix.multiply(scaleM);
-  translateM.setTranslate(0,0,-16);
+  translateM.setTranslate(0,0,-8);
   modelMatrix.multiply(translateM);
 
-  rgba=[0,.3,1,1];
+  rgba=[0,.0,1,1];
   gl.uniform1i(u_whichTexture,-2);
   drawCube(modelMatrix);
 
@@ -288,7 +275,7 @@ function sendTextToHTML(text,htmlID){
 
 //from textbook
 
-function initTextures(gl, n) {
+function initTextures(gl, n, imgSource) {
   var texture = gl.createTexture();   // Create a texture object
   if (!texture) {
     console.log('Failed to create the texture object');
@@ -303,7 +290,7 @@ function initTextures(gl, n) {
   // Register the event handler to be called on loading an image
   image.onload = function(){ loadTexture(gl, n, texture, u_Sampler0, image); };
   // Tell the browser to load an image
-  image.src = 'sky.jpg';
+  image.src = imgSource;
 
   return true;
 }
@@ -341,7 +328,7 @@ function keydown(ev) {
   if (ev.keyCode == 69) { // The e key was pressed
     camera.moveRight();
   } else { return; }
-  initTextures(gl,0);
+  initTextures(gl,0,'sky.jpg');
 }
 
 function main() {
@@ -356,7 +343,7 @@ function main() {
   //gl.uniformMatrix4fv(u_ProjectionMatrix,false,camera.projectionMatrix.elements);
 
 
-  initTextures(gl,0);
+  initTextures(gl,0,'sky.jpg');
   gl.enable(gl.DEPTH_TEST);
   // Specify the color for clearing <canvas>  
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
