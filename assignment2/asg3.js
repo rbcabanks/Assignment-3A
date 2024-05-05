@@ -210,16 +210,48 @@ function renderScene(){
   gl.uniform1i(u_whichTexture,-2);
   drawCube(modelMatrix);
   
+//walls
   modelMatrix=new Matrix4();
-  scaleM.setScale(1,1,1);
+  scaleM.setScale(1,1,13);
   modelMatrix.multiply(scaleM);
-  translateM.setTranslate(0,0,-16);
+  translateM.setTranslate(-9,0,-1);
   modelMatrix.multiply(translateM);
 
   rgba=[0,1,0,1];
   gl.uniform1i(u_whichTexture,-2);
   drawCube(modelMatrix);
 
+  modelMatrix=new Matrix4();
+  scaleM.setScale(1,1,13);
+  modelMatrix.multiply(scaleM);
+  translateM.setTranslate(9,0,-1);
+  modelMatrix.multiply(translateM);
+
+  rgba=[0,1,0,1];
+  gl.uniform1i(u_whichTexture,-2);
+  drawCube(modelMatrix);
+
+  modelMatrix=new Matrix4();
+  scaleM.setScale(13,1,1);
+  modelMatrix.multiply(scaleM);
+  translateM.setTranslate(0,0,-27);
+  modelMatrix.multiply(translateM);
+
+  rgba=[0,1,0,1];
+  gl.uniform1i(u_whichTexture,-2);
+  drawCube(modelMatrix);
+
+  // cube
+
+  modelMatrix=new Matrix4();
+  scaleM.setScale(1,1,1);
+  modelMatrix.multiply(scaleM);
+  translateM.setTranslate(0,0,-16);
+  modelMatrix.multiply(translateM);
+
+  rgba=[0,.3,1,1];
+  gl.uniform1i(u_whichTexture,-2);
+  drawCube(modelMatrix);
 
   var duration = performance.now()-startTime;
   sendTextToHTML(("ms:" + Math.floor(duration)+" fps:"+ Math.floor(10000/duration)/10), "numdot")

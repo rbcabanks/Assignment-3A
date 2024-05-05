@@ -26,13 +26,21 @@ class Camera {
     f.set(this.at);
     f.sub(this.eye);
     f.normalize();
-    //f.mul(3);
+    f.mul(3);
 
     this.eye.add(f);
     this.at.add(f);
+    
   }
   moveBackward(){
-      
+      var f= new Vector3();
+      f.set(this.eye);
+      f.sub(this.at);
+      f.normalize();
+      f.mul(3);
+
+      this.eye.add(f);
+      this.at.add(f);
   }
   moveLeft(){
 
@@ -44,9 +52,6 @@ class Camera {
   
   }
   panRight(){
-
-  }
-  updateView(){
 
   }
 
